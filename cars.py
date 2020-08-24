@@ -3,9 +3,9 @@
 import json
 import locale
 import sys
-from reports import generate as report
-from emails import generate as email_generate
-from emails import send as email_send
+# from reports import generate as report
+# from emails import generate as email_generate
+# from emails import send as email_send
 
 def load_data(filename):
   """Loads the contents of filename as a JSON file."""
@@ -16,9 +16,7 @@ def load_data(filename):
 
 def format_car(car):
   """Given a car dictionary, returns a nicely formatted name."""
-  return "{} {} ({})".format(
-      car["car_make"], car["car_model"], car["car_year"])
-
+  return "{} {} ({})".format(car["car_make"], car["car_model"], car["car_year"])
 
 def process_data(data):
   """Analyzes the data, looking for maximums.
@@ -50,7 +48,7 @@ def process_data(data):
       item["item_sales"] = item_sales
       max_sales = item
     
-    # Acquire 
+    # Acquire the total sales of associated year.
     if item_year not in popular_year.keys():
       popular_year[item_year] = item["total_sales"]
     else:
@@ -87,12 +85,12 @@ def main(argv):
   print(summary)
 
   # TODO: turn this into a PDF report
-  report("/tmp/cars.pdf", "Cars Sales Report", new_summary, cars_dict_to_table(data))
+  # report("/tmp/cars.pdf", "Cars Sales Report", new_summary, cars_dict_to_table(data))
 
   # TODO: send the PDF report as an email attachment
-  msg = email_generate("automation@example.com", "student-03-8c385c18c4ba@example.com",
-                         "Sales summary for last month", new_summary, "/tmp/cars.pdf")
-  email_send(msg)
+  # msg = email_generate("automation@example.com", "student-03-8c385c18c4ba@example.com",
+  #                        "Sales summary for last month", new_summary, "/tmp/cars.pdf")
+  # email_send(msg)
 
 if __name__ == "__main__":
   main(sys.argv)
