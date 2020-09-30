@@ -3,9 +3,16 @@
 import json
 import locale
 import sys
+import reports
 # from reports import generate as report
 # from emails import generate as email_generate
 # from emails import send as email_send
+
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, Image
+from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.lib import colors
+from reportlab.graphics.shapes import Drawing
+from reportlab.graphics.charts.piecharts import Pie
 
 def load_data(filename):
   """Loads the contents of filename as a JSON file."""
@@ -61,7 +68,7 @@ def process_data(data):
   year_most_sold = max(popular_year, key=popular_year.get)
 
   summary = [
-    "The {} generated the most item_revenue: ${}".format(format_car(max_revenue["car"]), max_revenue["item_revenue"]),
+    "The {} generated the most item revenue: ${}".format(format_car(max_revenue["car"]), max_revenue["item_revenue"]),
     "The {} generated the most sales: {}".format(format_car(max_sales["car"]), max_sales["item_sales"]),
     "The most popular year was: {} with {} total sales.".format(year_most_sold, most_sold),
   ]
@@ -79,12 +86,24 @@ def cars_dict_to_table(car_data):
 
 def main(argv):
   """Process the JSON data and generate a full report out of it."""
-  data = load_data("car_sales.json")
+  data = load_data(r"C:\Users\kyleh\OneDrive\Education\Coursera\Google IT Automation with Python\Automating Real-World Tasks with Python\Week 3\Resources\Automatically Generate a PDF and send it by Email\car_sales.json")
   summary = process_data(data)
-  new_summary = '<br/>'.join(summary)
+  # new_summary = '<br/>'.join(summary)
   print(summary)
 
   # TODO: turn this into a PDF report
+  
+  report = SimpleDocTemplate(r"C:\Users\kyleh\OneDrive\Education\Coursera\Google IT Automation with Python\Automating Real-World Tasks with Python\Week 3\Resources\Automatically Generate a PDF and send it by Email\Car Sales Report.pdf")
+  styles = getSampleStyleSheet()
+
+  report_title = Paragraph("Car Sales Information", styles["h1"])
+
+  table_style = [('GRID', (0,0), (-1,-1), 0.5, colors.black)]
+  new_summary = [[x] for x in summary]
+  report_table = Table(new_summary, style=table_style, hAlign="LEFT")
+  
+  report.build([report_title, report_table])
+
   # report("/tmp/cars.pdf", "Cars Sales Report", new_summary, cars_dict_to_table(data))
 
   # TODO: send the PDF report as an email attachment
