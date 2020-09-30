@@ -4,9 +4,9 @@ import json
 import locale
 import sys
 import reports
-# from reports import generate as report
-# from emails import generate as email_generate
-# from emails import send as email_send
+from reports import generate as report
+from emails import generate as email_generate
+from emails import send as email_send
 
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, Image
 from reportlab.lib.styles import getSampleStyleSheet
@@ -96,7 +96,7 @@ def main(argv):
   report = SimpleDocTemplate(r"C:\Users\kyleh\OneDrive\Education\Coursera\Google IT Automation with Python\Automating Real-World Tasks with Python\Week 3\Resources\Automatically Generate a PDF and send it by Email\Car Sales Report.pdf")
   styles = getSampleStyleSheet()
 
-  report_title = Paragraph("Car Sales Information", styles["h1"])
+  report_title = Paragraph("Last Months Sales Summary", styles["h1"])
 
   table_style = [('GRID', (0,0), (-1,-1), 0.5, colors.black)]
   new_summary = [[x] for x in summary]
@@ -104,12 +104,14 @@ def main(argv):
   
   report.build([report_title, report_table])
 
-  # report("/tmp/cars.pdf", "Cars Sales Report", new_summary, cars_dict_to_table(data))
-
   # TODO: send the PDF report as an email attachment
-  # msg = email_generate("automation@example.com", "student-03-8c385c18c4ba@example.com",
-  #                        "Sales summary for last month", new_summary, "/tmp/cars.pdf")
-  # email_send(msg)
+  msg = email_generate("automation@example.com", "kylehollands@gmail.com",
+                         "Sales summary for last month", new_summary, "/tmp/cars.pdf")
+  email_send(msg)
+
+  
+  
+  # report("/tmp/cars.pdf", "Cars Sales Report", new_summary, cars_dict_to_table(data))
 
 if __name__ == "__main__":
   main(sys.argv)
